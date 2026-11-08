@@ -1,107 +1,95 @@
 # Segmentasi Polip pada Citra Kolonoskopi dengan U-Net
 
-<!--
-  TEMPLATE LAPORAN — Tugas P10 Kecerdasan Buatan (BM25-41204), Teknik Biomedis ITERA.
-  Petunjuk lengkap: https://mctm.web.id/ai-bm/tugas
+**Tugas P10 Kecerdasan Buatan (BM25-41204)**  
+Program Studi Teknik Biomedis, Institut Teknologi Sumatera
 
-  Cara memakai:
-  - Ganti semua teks yang diawali "✍️" dengan tulisan kelompokmu, lalu hapus tanda ✍️-nya.
-  - Blok komentar seperti ini adalah petunjuk; tidak tampil di GitHub. Boleh dihapus.
-  - Gambar diambil dari folder hasil/ yang dibuat otomatis oleh notebook.
-  - Jangan hapus judul-judul bagian (##).
--->
+## Anggota Kelompok
 
-**Tugas P10 — Kecerdasan Buatan (BM25-41204), Teknik Biomedis ITERA**
-
-## Anggota kelompok
-
-| Nama | NIM | Username GitHub | Kontribusi utama |
-|---|---|---|---|
-| ✍️ | ✍️ | ✍️ | ✍️ misal: menjalankan eksperimen, menulis Bagian 3 |
-| ✍️ | ✍️ | ✍️ | ✍️ |
-| ✍️ | ✍️ | ✍️ | ✍️ |
+1. Bintang Putra Gunawan
+2. Aisyah Ratu Pratiwi
+3. Gusti Ayu Tegar Ikhtiari Emily
 
 ## 1. Pertanyaan
 
-Augmentasi apa yang membantu U-Net menemukan polip pada citra kolonoskopi, dan augmentasi apa yang tidak? Kenapa?
+Augmentasi apa yang dapat meningkatkan kemampuan model U-Net dalam melakukan segmentasi polip pada citra kolonoskopi, dan augmentasi apa yang justru memberikan hasil kurang baik?
 
-## 2. Data & pengaturan
+## 2. Data dan Pengaturan Eksperimen
 
-<!-- Isi dari Bagian 2 notebook. Pastikan CEPAT = False untuk hasil akhir. -->
+Dataset yang digunakan adalah Kvasir-SEG, yaitu dataset citra kolonoskopi yang dilengkapi dengan mask sebagai penanda area polip. Pada eksperimen ini, citra diolah dengan ukuran 128 × 128 piksel.
 
-- Dataset: Kvasir-SEG (1000 citra kolonoskopi + mask polip), diperkecil ke 128 × 128 piksel.
-- Data uji: 200 citra (tetap). Data latih: ✍️ citra per ulangan.
-- Model: U-Net mini (±0,5 juta parameter), ✍️ epoch, ✍️ ulangan per skenario.
-- Dijalankan di: ✍️ (misal: Google Colab T4 / laptop CPU / Mac M1).
+Model yang digunakan adalah U-Net Mini dengan pengaturan sebagai berikut:
 
-![Contoh data](hasil/contoh_data.png)
+- Data latih: 200 citra.
+- Data uji: 200 citra.
+- Ukuran citra: 128 × 128 piksel.
+- Optimizer: Adam.
+- Learning rate: 0,001.
+- Jumlah epoch: 40.
+- Pengulangan eksperimen: 3 kali untuk setiap skenario.
+- Perangkat komputasi: GPU CUDA.
 
-## 3. Skenario augmentasi & hipotesis
+## 3. Skenario Augmentasi dan Hipotesis
 
-<!-- Tulis bagian ini SEBELUM menjalankan eksperimen. Commit dulu, baru jalankan.
-     Alasan klinis = kenapa variasi ini mungkin (atau tidak mungkin) terjadi pada kolonoskopi sungguhan. -->
+Terdapat empat skenario yang diuji, yaitu satu skenario tanpa augmentasi dan tiga skenario dengan jenis augmentasi yang berbeda.
 
-| Skenario | Augmentasi (kode) | Alasan klinis | Hipotesis: Dice naik/turun/sama? |
-|---|---|---|---|
-| Tanpa augmentasi | — | Pembanding | — |
-| ✍️ | ✍️ `v2....` | ✍️ | ✍️ |
-| ✍️ | ✍️ `v2....` | ✍️ | ✍️ |
+| Skenario | Teknik yang Digunakan | Hipotesis |
+|---|---|---|
+| Tanpa augmentasi | Citra digunakan tanpa perubahan | Digunakan sebagai pembanding terhadap skenario lainnya |
+| Transformasi geometris | Horizontal flip, vertical flip, dan rotasi hingga 180° | Model diharapkan dapat mengenali polip meskipun posisi dan orientasinya berubah |
+| Variasi kualitas citra | Perubahan brightness, contrast, dan Gaussian blur | Model diharapkan lebih mampu mengenali polip pada kondisi pencahayaan dan ketajaman yang berbeda |
+| Variasi karakteristik warna | Perubahan saturation dan hue | Model diharapkan dapat mengenali polip meskipun terdapat perubahan warna pada citra |
 
-Contoh augmentasi yang dicoba:
+## 4. Hasil Eksperimen
 
-![Contoh augmentasi](hasil/augmentasi_flip.png)
-<!-- Ganti nama file sesuai skenario kalian (lihat isi folder hasil/). -->
+Hasil setiap skenario dibandingkan menggunakan Dice Score dan Intersection over Union (IoU). Pengujian dilakukan sebanyak tiga kali untuk setiap skenario, kemudian dihitung nilai rata-rata dan simpangan bakunya.
 
-## 4. Hasil
+| Skenario | Dice (Rata-rata ± SB) | IoU (Rata-rata ± SB) |
+|---|---:|---:|
+| Tanpa augmentasi | 0,582 ± 0,010 | 0,465 ± 0,009 |
+| Transformasi geometris | 0,625 ± 0,016 | 0,505 ± 0,014 |
+| Variasi kualitas citra | 0,572 ± 0,036 | 0,450 ± 0,027 |
+| Variasi karakteristik warna | 0,555 ± 0,055 | 0,435 ± 0,047 |
 
-<!-- Tempel isi hasil/ringkasan.md di sini. -->
+**Grafik Perbandingan Hasil**
 
-✍️ tempel tabel dari `hasil/ringkasan.md`
+![Grafik perbandingan](perbandingan.png)
 
-![Perbandingan Dice](hasil/perbandingan.png)
+Hasil lengkap setiap pengulangan dapat dilihat pada file [ringkasan.md](ringkasan.md).
 
-## 5. Analisis peta kesalahan
+## 5. Analisis Peta Kesalahan
 
-![Peta kesalahan](hasil/peta_kesalahan.png)
+Peta kesalahan digunakan untuk melihat bagian hasil segmentasi yang berbeda dari mask sebenarnya. Dari visualisasi ini, dapat diamati bagian polip yang berhasil terdeteksi serta bagian yang masih mengalami kesalahan, seperti area polip yang tidak terdeteksi atau area di luar polip yang ikut tersegmentasi.
 
-<!-- Hijau = benar, merah = false positive, biru = false negative.
-     Pertanyaan pemandu: Polip seperti apa yang sering terlewat (kecil? datar? warna mirip dinding usus?)
-     Apa yang sering dikira polip padahal bukan? Apakah augmentasi memperbaiki kasus sulit? -->
+![Peta kesalahan](peta_kesalahan.png)
 
-✍️
+## 6. Pembahasan dan Kesimpulan
 
-## 6. Pembahasan & kesimpulan
+Berdasarkan hasil pengujian, transformasi geometris memberikan hasil terbaik dengan rata-rata Dice sebesar 0,625 dan IoU sebesar 0,505. Nilai tersebut lebih tinggi dibandingkan skenario tanpa augmentasi yang memperoleh Dice sebesar 0,582 dan IoU sebesar 0,465.
 
-<!-- Bandingkan hasil dengan hipotesis di Bagian 3. Hipotesis yang ternyata salah tetap bernilai,
-     asalkan dijelaskan kenapa. Perbedaan kecil (lebih kecil dari simpangan baku) belum tentu berarti. -->
+Pada skenario variasi kualitas citra, nilai Dice yang diperoleh adalah 0,572. Hasil ini sedikit lebih rendah dibandingkan skenario tanpa augmentasi. Hal serupa juga terlihat pada variasi karakteristik warna yang memperoleh nilai Dice sebesar 0,555.
 
-✍️
+Dari hasil tersebut, dapat dilihat bahwa penggunaan augmentasi tidak selalu meningkatkan hasil segmentasi. Dalam eksperimen ini, transformasi geometris memberikan hasil yang lebih baik, sedangkan variasi kualitas citra dan warna belum memberikan peningkatan dibandingkan kondisi tanpa augmentasi.
 
-## 7. Pembagian kerja
+## 7. Pembagian Kerja
 
-<!-- Siapa mengerjakan apa. Penilaian proses kerja dilihat dari riwayat commit tiap anggota. -->
+Pengerjaan tugas dibagi berdasarkan beberapa bagian utama, yaitu:
 
-✍️
+1. **Bintang Putra Gunawan:** Mempelajari materi terkait segmentasi citra dan konsep dasar U-Net.
+2. **Aisyah Ratu Pratiwi:** Mempelajari jenis augmentasi citra serta membantu pembahasan hasil eksperimen.
+3. **Gusti Ayu Tegar Ikhtiari Emily:** Menyiapkan dan menjalankan notebook, melakukan pengujian setiap skenario, mengolah hasil, serta menyusun dokumentasi proyek.
 
 ## 8. Penggunaan AI
 
-<!-- Wajib diisi, walau tidak memakai AI (tulis "Tidak memakai AI").
-     Contoh: "Claude Code (CLI) untuk menulis skenario augmentasi dan memperbaiki error di Bagian 4.
-     Draf Bagian 6 ditulis sendiri, lalu dirapikan bahasanya dengan bantuan AI." -->
+AI digunakan sebagai alat bantu untuk memahami materi U-Net dan augmentasi citra, membantu pemeriksaan kode, serta mendiskusikan hasil eksperimen dan penyusunan dokumentasi. Hasil pengujian yang dicantumkan tetap mengacu pada proses eksperimen yang dilakukan dalam notebook.
 
-✍️
+## Cara Menjalankan Notebook
 
-## Cara menjalankan ulang
-
-```bash
-uv sync
-uv run jupyter lab segmentasi_polip.ipynb
-```
-
-Atau buka notebook di Google Colab (Runtime → Change runtime type → T4 GPU).
+1. Buka file `segmentasi_polip.ipynb`.
+2. Jalankan notebook menggunakan Google Colab atau Jupyter Notebook.
+3. Siapkan dataset Kvasir-SEG sesuai lokasi yang digunakan dalam notebook.
+4. Jalankan setiap sel secara berurutan untuk melihat proses pelatihan dan hasil evaluasi model.
 
 ## Referensi
 
-- Jha, D., dkk. (2020). Kvasir-SEG: A Segmented Polyp Dataset. *MultiMedia Modeling (MMM 2020)*, 451–462.
-- Ronneberger, O., Fischer, P., & Brox, T. (2015). U-Net: Convolutional Networks for Biomedical Image Segmentation. *MICCAI*. arXiv:1505.04597.
-- ✍️ tambahkan referensi lain yang kalian pakai
+1. Jha, D., et al. (2020). *Kvasir-SEG: A Segmented Polyp Dataset*.
+2. Ronneberger, O., Fischer, P., & Brox, T. (2015). *U-Net: Convolutional Networks for Biomedical Image Segmentation*.
