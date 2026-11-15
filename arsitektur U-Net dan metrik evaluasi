@@ -1,0 +1,19 @@
+### 🧬 Konsep Dasar & Arsitektur U-Net
+*Disusun oleh: Bintang Putra Gunawan*
+
+Model yang digunakan dalam penelitian ini adalah **U-Net**, sebuah arsitektur *Convolutional Neural Network* (CNN) yang dirancang khusus untuk segmentasi citra medis (*pixel-wise classification*).
+
+#### Komponen Utama Arsitektur:
+1. **Contracting Path (Encoder)**: 
+   * Mengekstraksi fitur visual hirarkis dari citra masukan kolonoskopi.
+   * Menggunakan pasangan konvolusi 3×3 (`Conv2d`), fungsi aktivasi `ReLU`, serta *downsampling* menggunakan `MaxPool2d` (2×2).
+2. **Expanding Path (Decoder)**:
+   * Mengonstruksi kembali peta segmentasi (*segmentation mask*) ke ukuran spasial semula (128×128 piksel).
+   * Menggunakan konvolusi terbalik (*transposed convolution*) `ConvTranspose2d` untuk proses *upsampling*.
+3. **Skip Connections (Jembatan Fitur)**:
+   * Menghubungkan secara langsung peta fitur (*feature maps*) dari *Encoder* ke *Decoder* pada tingkat resolusi spasial yang sama.
+   * **Fungsi Biomedis**: Mencegah hilangnya detail spasial halus (seperti tekstur dan batas tepi polip) akibat proses kompresi, sehingga batas jaringan polip terdistribusi secara presisi.
+
+#### Metrik Evaluasi:
+* **Dice Coefficient**: \\(\frac{2 |A \cap B|}{|A| + |B|}\\) — mengukur derajat tumpang tindih antara hasil prediksi model dengan area polip asli (*ground truth*).
+* **IoU (Intersection over Union)**: \\(\frac{|A \cap B|}{|A \cup B|}\\) — mengukur rasio irisan terhadap gabungan area polip.
