@@ -5,9 +5,9 @@ Program Studi Teknik Biomedis, Institut Teknologi Sumatera
 
 ## Anggota Kelompok
 
-1. Bintang Putra Gunawan
-2. Aisyah Ratu Pratiwi
-3. Gusti Ayu Tegar Ikhtiari Emily
+1. Bintang Putra Gunawan (123430028) (bp877819-droid)
+2. Aisyah Ratu Pratiwi (123430106) (2212ici)
+3. Gusti Ayu Tegar Ikhtiari Emily (123430038) (ikhtiarily)
 
 ## 1. Pertanyaan
 
